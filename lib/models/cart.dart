@@ -1,63 +1,61 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:shop/models/cart_item.dart';
 import 'package:shop/models/product.dart';
 
 class Cart with ChangeNotifier {
-  Map<String, CartItem> _item = {};
+  Map<String, CartItem> _items = {};
 
   Map<String, CartItem> get items {
-    return {..._item};
+    return {..._items};
   }
 
   int get itemsCount {
-    return _item.length;
+    return items.length;
   }
 
-  void removeItem(String productId) {
-    _item.remove(productId);
-    notifyListeners();
-  }
-
-  void clear() {
-    _item = {};
-    notifyListeners();
+  double get totalAmount {
+    double total = 0.0;
+    _items.forEach((key, cartItem) {
+      total += cartItem.price * cartItem.quantity;
+    });
+    return total;
   }
 
   void addItem(Product product) {
-    if (_item.containsKey(product.id)) {
-      _item.update(
+    if (_items.containsKey(product.id)) {
+      _items.update(
         product.id,
         (existingItem) => CartItem(
-            id: existingItem.id,
-            productID: existingItem.productID,
-            name: existingItem.name,
-            quantity: existingItem.quantity + 1,
-            price: existingItem.price),
+          id: existingItem.id,
+          productId: existingItem.productId,
+          name: existingItem.name,
+          quantity: existingItem.quantity + 1,
+          price: existingItem.price,
+        ),
       );
     } else {
-      _item.putIfAbsent(
+      _items.putIfAbsent(
         product.id,
         () => CartItem(
-            id: Random().nextDouble().toString(),
-            productID: product.id,
-            name: product.name,
-            quantity: 1,
-            price: product.price),
+          id: Random().nextDouble().toString(),
+          productId: product.id,
+          name: product.name,
+          quantity: 1,
+          price: product.price,
+        ),
       );
     }
     notifyListeners();
   }
 
-  double get totalAmount {
-    double total = 0.0;
+  void removeItem(String productId) {
+    _items.remove(productId);
+    notifyListeners();
+  }
 
-    _item.forEach(
-      (key, cartItem) {
-        total += cartItem.price * cartItem.quantity;
-      },
-    );
-    return total;
+  void clear() {
+    _items = {};
+    notifyListeners();
   }
 }
