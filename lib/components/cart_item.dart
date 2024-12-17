@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop/models/cart.dart';
 import 'package:shop/models/cart_item.dart';
-
-import '../models/cart.dart';
 
 class CartItemWidget extends StatelessWidget {
   final CartItem cartItem;
@@ -12,41 +11,40 @@ class CartItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dismissible(
+      key: ValueKey(cartItem.id),
       direction: DismissDirection.endToStart,
       background: Container(
-        color: Theme.of(context).errorColor,
-        child: Icon(
-          Icons.delete,
-          color: Colors.white,
-          size: 40,
-        ),
+        color: Colors.red,
         alignment: Alignment.centerRight,
-        padding: EdgeInsets.only(
-          right: 20,
-        ),
+        padding: const EdgeInsets.only(right: 20),
         margin: const EdgeInsets.symmetric(
           horizontal: 15,
           vertical: 4,
         ),
+        child: const Icon(
+          Icons.delete,
+          color: Colors.white,
+          size: 40,
+        ),
       ),
       confirmDismiss: (_) {
-        return showDialog(
+        return showDialog<bool>(
           context: context,
           builder: (ctx) => AlertDialog(
-            title: Text('Tem certeza?'),
-            content: Text("Quer remover o item do carrinho?"),
+            title: const Text('Tem Certeza?'),
+            content: const Text('Quer remover o item do carrinho?'),
             actions: [
               TextButton(
+                child: const Text('Não'),
                 onPressed: () {
                   Navigator.of(ctx).pop(false);
                 },
-                child: Text('Não'),
               ),
               TextButton(
+                child: const Text('Sim'),
                 onPressed: () {
                   Navigator.of(ctx).pop(true);
                 },
-                child: Text('Sim'),
               ),
             ],
           ),
@@ -56,9 +54,8 @@ class CartItemWidget extends StatelessWidget {
         Provider.of<Cart>(
           context,
           listen: false,
-        ).removeItem(cartItem.id);
+        ).removeItem(cartItem.productId);
       },
-      key: ValueKey(cartItem.id),
       child: Card(
         margin: const EdgeInsets.symmetric(
           horizontal: 15,

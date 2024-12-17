@@ -29,13 +29,13 @@ class ProductList with ChangeNotifier {
     _items.clear();
 
     final response = await http.get(
-      Uri.parse('${Constants.product_base_url}.json?auth=$_token'),
+      Uri.parse('${Constants.productBaseUrl}.json?auth=$_token'),
     );
     if (response.body == 'null') return;
 
     final favResponse = await http.get(
       Uri.parse(
-        '${Constants.user_favorite}/$_userId.json?auth=$_token',
+        '${Constants.userFavoritesUrl}/$_userId.json?auth=$_token',
       ),
     );
 
@@ -79,7 +79,7 @@ class ProductList with ChangeNotifier {
 
   Future<void> addProduct(Product product) async {
     final response = await http.post(
-      Uri.parse('${Constants.product_base_url}.json?auth=$_token'),
+      Uri.parse('${Constants.productBaseUrl}.json?auth=$_token'),
       body: jsonEncode(
         {
           "name": product.name,
@@ -107,7 +107,7 @@ class ProductList with ChangeNotifier {
     if (index >= 0) {
       await http.patch(
         Uri.parse(
-            '${Constants.product_base_url}/${product.id}.json?auth=$_token'),
+            '${Constants.productBaseUrl}/${product.id}.json?auth=$_token'),
         body: jsonEncode(
           {
             "name": product.name,
@@ -133,13 +133,13 @@ class ProductList with ChangeNotifier {
 
       final response = await http.delete(
         Uri.parse(
-            '${Constants.product_base_url}/${product.id}.json?auth=$_token'),
+            '${Constants.productBaseUrl}/${product.id}.json?auth=$_token'),
       );
 
       if (response.statusCode >= 400) {
         _items.insert(index, product);
         notifyListeners();
-        throw HtttpExceptionn(
+        throw HttpException(
           msg: 'Não foi possível excluir o produto.',
           statusCode: response.statusCode,
         );

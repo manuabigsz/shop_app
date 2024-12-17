@@ -30,14 +30,14 @@ class ProductItem extends StatelessWidget {
               color: Theme.of(context).colorScheme.primary,
               onPressed: () {
                 Navigator.of(context).pushNamed(
-                  AppRoutes.productsForm,
+                  AppRoutes.productForm,
                   arguments: product,
                 );
               },
             ),
             IconButton(
               icon: const Icon(Icons.delete),
-              color: Theme.of(context).errorColor,
+              color: Colors.red,
               onPressed: () {
                 showDialog<bool>(
                   context: context,
@@ -62,7 +62,7 @@ class ProductItem extends StatelessWidget {
                         context,
                         listen: false,
                       ).removeProduct(product);
-                    } on HtttpExceptionn catch (error) {
+                    } on HttpException catch (error) {
                       msg.showSnackBar(
                         SnackBar(
                           content: Text(error.toString()),

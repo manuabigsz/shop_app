@@ -4,9 +4,8 @@ import 'package:shop/components/app_drawer.dart';
 import 'package:shop/components/badge.dart';
 import 'package:shop/components/product_grid.dart';
 import 'package:shop/models/cart.dart';
+import 'package:shop/models/product_list.dart';
 import 'package:shop/utils/app_routes.dart';
-
-import '../models/product_list.dart';
 
 enum FilterOptions {
   favorite,
@@ -27,9 +26,10 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
   @override
   void initState() {
     super.initState();
-    Provider.of<ProductList>(context, listen: false)
-        .loadProducts()
-        .then((value) {
+    Provider.of<ProductList>(
+      context,
+      listen: false,
+    ).loadProducts().then((value) {
       setState(() {
         _isLoading = false;
       });
@@ -71,7 +71,7 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
               },
               icon: const Icon(Icons.shopping_cart),
             ),
-            builder: (ctx, cart, child) => Badgeed(
+            builder: (ctx, cart, child) => BadgeComponent(
               value: cart.itemsCount.toString(),
               child: child!,
             ),
@@ -79,11 +79,9 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
         ],
       ),
       body: _isLoading
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
+          ? const Center(child: CircularProgressIndicator())
           : ProductGrid(_showFavoriteOnly),
-      drawer: AppDrawer(),
+      drawer: const AppDrawer(),
     );
   }
 }
